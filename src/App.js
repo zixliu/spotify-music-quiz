@@ -9,7 +9,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 const s = new SpotifyWebApi();
 
 function App() {
-  const [{ token }, dispatch] = useStateValue();
+  // const [{ token }, dispatch] = useStateValue();
 
   useEffect(() => {
     // Set token
@@ -20,20 +20,17 @@ function App() {
     if (_token) {
       s.setAccessToken(_token);
 
-      dispatch({
-        type: "SET_TOKEN",
-        token: _token,
-      });
+      // dispatch({
+      //   type: "SET_TOKEN",
+      //   token: _token,
+      // });
 
       s.getPlaylist("37i9dQZEVXcJZyENOWUFo7").then((response) =>
-        dispatch({
-          type: "SET_DISCOVER_WEEKLY",
-          discover_weekly: response,
-        })
+        console.log("omg, what is this " + response)
       );
       
     }
-  }, [token, dispatch]);
+  }); // , [token, dispatch]
 
   return (
     // <div className="App">
