@@ -1,2 +1,2 @@
-# wiki-timeline
-React project visualizing Wikipedia in a timeline
+# Spotify music quiz
+React project for spotify music quiz
