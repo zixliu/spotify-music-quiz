@@ -8,6 +8,16 @@ import { getTokenFromResponse } from "./spotifyConfig";
 var SpotifyWebApi = require('spotify-web-api-node');
 const s = new SpotifyWebApi();
 
+function shuffleArray(input) {
+  for (let i = input.length - 1; i >= 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    const itemAtIndex = input[randomIndex];
+    input[randomIndex] = input[i];
+    input[i] = itemAtIndex;
+  }
+  return input;
+}
+
 function App() {
   const [token, dispatch] = useState(null);
   const [track, setTrack] = useState(null);
@@ -27,14 +37,11 @@ function App() {
       });
 
       s.getPlaylist("3YA2HwKlRVBeHgIPB5FW2o").then((response) => {
-        setTrack(response.body.tracks.items[0].track)
+        let tracksShuffled = shuffleArray(response.body.tracks.items)
+        setTrack(tracksShuffled[0].track)
     })
-    
-      
     }
   }, [token, dispatch]); // , [token, dispatch]
-
-  
 
 
   return (
