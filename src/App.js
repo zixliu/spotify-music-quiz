@@ -1,6 +1,7 @@
 import './App.css';
 import Login from './Login';
 import Player from './Player';
+import InputField from './InputField';
 import React, { useEffect, useState } from "react";
 import { useStateValue } from "./StateProvider";
 import { getTokenFromResponse } from "./spotifyConfig";
@@ -49,6 +50,7 @@ function App() {
     <div className="app">
         {!token && <Login />}
         {token && <Player token={s.getAccessToken()} track={track}/>}
+        <InputField/>
     </div>
   );
 }
