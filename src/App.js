@@ -26,11 +26,12 @@ function App() {
       });
 
       s.getPlaylist("37i9dQZEVXcJZyENOWUFo7").then((response) =>
-        console.log("omg, what is this " + response)
+        console.log(response.body)
       );
       
     }
   }, [token, dispatch]); // , [token, dispatch]
+
 
   return (
     // <div className="App">
@@ -40,9 +41,10 @@ function App() {
     // </div>
     // {!token && <Login />}
       // {token && <Player spotify={s} />}
+      
     <div className="app">
         {!token && <Login />}
-        {token && <Player spotify={s} />}
+        {token && <Player token={s.getAccessToken()} trackUri={'spotify:track:1GRTz07Sdh75nVsIXmB3qH'}/>}
     </div>
   );
 }

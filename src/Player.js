@@ -1,39 +1,23 @@
-import React, { useState } from "react";
-import Footer from "./Footer";
-//import "./Player.css";
+import { useState, useEffect } from "react"
+import SpotifyPlayer from "react-spotify-web-playback"
 
-function Player({ spotify }) {
-    const [item, dispatch] = useState(null)
+export default function Player({ token, trackUri }) {
+  const [play, setPlay] = useState(false)
 
-    const playSong = (id) => {
-    spotify
-        .play({
-        uris: [`spotify:track:${id}`],
-        })
-        .then((res) => {
-        spotify.getMyCurrentPlayingTrack().then((r) => {
-            console.log(r)
-            dispatch({
-                type: "SET_ITEM",
-                item: r.item,
-              });
-        });
-        });
-    };
+  useEffect(() => setPlay(true), [trackUri])
 
+  console.log("acess token")
+  if (!token) return null
+  console.log("no access token")
   return (
-    <div className="body">
-        <Footer spotify={spotify}/>
-    </div>
-  );
-
+    <SpotifyPlayer
+      token={token}
+      showSaveIcon
+      callback={state => {
+        if (!state.isPlaying) setPlay(false)
+      }}
+      play={play}
+      uris={trackUri ? [trackUri] : []}
+    />
+  )
 }
-
-export default Player;
-
-
-
-
-
-
- 
