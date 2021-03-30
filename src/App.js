@@ -10,6 +10,7 @@ const s = new SpotifyWebApi();
 
 function App() {
   const [token, dispatch] = useState(null);
+  const [song, setSong] = useState(null);
 
   useEffect(() => {
     // Set token
@@ -25,12 +26,15 @@ function App() {
         token: _token,
       });
 
-      s.getPlaylist("37i9dQZEVXcJZyENOWUFo7").then((response) =>
-        console.log(response.body)
-      );
+      s.getPlaylist("3YA2HwKlRVBeHgIPB5FW2o").then((response) => {
+        setSong(response.body.tracks.items[0].track.uri)
+    })
+    
       
     }
   }, [token, dispatch]); // , [token, dispatch]
+
+  
 
 
   return (
@@ -44,7 +48,7 @@ function App() {
       
     <div className="app">
         {!token && <Login />}
-        {token && <Player token={s.getAccessToken()} trackUri={'spotify:track:1GRTz07Sdh75nVsIXmB3qH'}/>}
+        {token && <Player token={s.getAccessToken()} trackUri={song}/>}
     </div>
   );
 }
