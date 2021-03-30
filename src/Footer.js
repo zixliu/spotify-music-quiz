@@ -12,34 +12,39 @@ import "./Footer.css";
 import { Grid, Slider } from "@material-ui/core";
 
 function Footer({ spotify }) {
-  const [{ item, playing }, dispatch] = useState();
+  const [item, setItem] = useState("");
+  const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
-    spotify.getMyCurrentPlaybackState().then((r) => {
-      console.log(r);
-
-      dispatch({
+    spotify.getMyCurrentPlaybackState()
+    .then((r) => {
+      setItem({
         type: "SET_PLAYING",
-        playing: r.is_playing,
+        playing: r.body.is_playing,
       });
 
-      dispatch({
+      setPlaying({
         type: "SET_ITEM",
-        item: r.item,
+        item: r.body.item,
       });
-    });
+    })
+    .catch(
+      (error) => {
+        console.log('oops, error is ' + error)
+      }
+    )
   }, [spotify]);
 
   const handlePlayPause = () => {
     if (playing) {
       spotify.pause();
-      dispatch({
+      setPlaying({
         type: "SET_PLAYING",
         playing: false,
       });
     } else {
       spotify.play();
-      dispatch({
+      setPlaying({
         type: "SET_PLAYING",
         playing: true,
       });
@@ -49,11 +54,11 @@ function Footer({ spotify }) {
   const skipNext = () => {
     spotify.skipToNext();
     spotify.getMyCurrentPlayingTrack().then((r) => {
-      dispatch({
+      setItem({
         type: "SET_ITEM",
         item: r.item,
       });
-      dispatch({
+      setPlaying({
         type: "SET_PLAYING",
         playing: true,
       });
@@ -63,11 +68,11 @@ function Footer({ spotify }) {
   const skipPrevious = () => {
     spotify.skipToPrevious();
     spotify.getMyCurrentPlayingTrack().then((r) => {
-      dispatch({
+      setItem({
         type: "SET_ITEM",
         item: r.item,
       });
-      dispatch({
+      setPlaying({
         type: "SET_PLAYING",
         playing: true,
       });
@@ -77,22 +82,6 @@ function Footer({ spotify }) {
   return (
     <div className="footer">
       <div className="footer__left">
-        <img
-          className="footer__albumLogo"
-          src={item?.album.images[0].url}
-          alt={item?.name}
-        />
-        {item ? (
-          <div className="footer__songInfo">
-            <h4>{item.name}</h4>
-            <p>{item.artists.map((artist) => artist.name).join(", ")}</p>
-          </div>
-        ) : (
-          <div className="footer__songInfo">
-            <h4>No song is playing</h4>
-            <p>...</p>
-          </div>
-        )}
       </div>
 
       <div className="footer__center">
