@@ -4,11 +4,10 @@ import SpotifyPlayer from "react-spotify-web-playback"
 export default function Player({ token, track }) {
   const [play, setPlay] = useState(false)
 
-  useEffect(() => setPlay(true), [track])
+  console.log(token)
 
-  console.log("acess token")
+  useEffect(() => setPlay(true), [track])
   if (!token) return null
-  console.log("no access token")
   return (
     <SpotifyPlayer
       token={token}
