@@ -44,7 +44,7 @@ function App() {
       
     <div className="app">
         {!token && <Login />}
-        {token && <Player token={s.getAccessToken()} trackUri={'spotify:track:1GRTz07Sdh75nVsIXmB3qH'}/>}
+        {token && <Player token={s.getAccessToken()} trackUri={'spotify:track:11dFghVXANMlKmJXsNCbNl'}/>}
     </div>
   );
 }
