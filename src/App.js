@@ -3,7 +3,9 @@ import Login from './Login';
 import Player from './Player';
 import Menu from './Menu';
 import InputField from './InputField';
+import Settings from './Settings';
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { useStateValue } from "./StateProvider";
 import { getTokenFromResponse } from "./spotifyConfig";
 
@@ -24,6 +26,8 @@ function App() {
   const [token, dispatch] = useState(null);
   const [track, setTrack] = useState(null);
   const [gameActive, setGameState] = useState(false);
+  const [numberOfTracks, setNumberOfTracks] = useState(null);
+  const [playlist, setPlaylist] = useState(null);
 
   useEffect(() => {
     // Set token
@@ -67,6 +71,10 @@ function App() {
       setGameState(gameState)
   }
 
+  const getSettings = (numberOfTracks, playlist) => {
+    setNumberOfTracks(numberOfTracks);
+    setPlaylist(playlist);
+  }
 
   return (
     // <div className="App">
@@ -76,13 +84,21 @@ function App() {
     // </div>
     // {!token && <Login />}
       // {token && <Player spotify={s} />}
-      
+
+    <Router>
     <div className="app">
-        {!token && <Login />}
-        {token && gameActive && <Player token={s.getAccessToken()} track={track}/>}
-        {token && gameActive && <InputField track={track} setAnswerCorrect={setAnswerCorrect}/>}
-        {!gameActive && <Menu changeGameState={changeGameState}/>}
+        <Route path='/' exact render={() => ( // use exact render to avoid showing settings- and play-buttons on settings-page
+          <>
+            {!token && <Login />}
+            {token && gameActive && <Player token={s.getAccessToken()} track={track}/>}
+            {token && gameActive && <InputField track={track} setAnswerCorrect={setAnswerCorrect}/>}
+            {!gameActive && <Menu changeGameState={changeGameState} settings={ {"numberOfTracks": numberOfTracks, "playlist": playlist} }/>}
+          </>
+        )}>
+        </Route>
+        {<Route exact path="/settings" render={() => <Settings getSettings={getSettings} />} />}
     </div>
+    </Router>
   );
 }
 
