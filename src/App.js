@@ -3,7 +3,9 @@ import Login from './Login';
 import Player from './Player';
 import Menu from './Menu';
 import InputField from './InputField';
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import Settings from './Settings';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { useStateValue } from "./StateProvider";
 import { getTokenFromResponse } from "./spotifyConfig";
 
@@ -25,6 +27,8 @@ function App() {
   const [trackList, setTrackList] = useState();
   const [trackIndex, setTrackIndex] = useState(0);
   const [gameActive, setGameState] = useState(false);
+  const [numberOfTracks, setNumberOfTracks] = useState(null);
+  const [playlist, setPlaylist] = useState(null);
 
   useEffect(() => {
     // Set token
@@ -71,19 +75,31 @@ function App() {
   const changeGameState = (gameState) => {
       setGameState(gameState)
   }
+  
+  const getSettings = (numberOfTracks, playlist) => {
+    setNumberOfTracks(numberOfTracks);
+    setPlaylist(playlist);
+  }
 
   return (
+    <Router>
     <div className="app">
-      {!token && <Login />}
-      { token && gameActive && trackList && 
-        <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
-      }
-      { token && gameActive && trackList && 
-        <InputField track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} />
-      }
-      {!gameActive && <Menu changeGameState={changeGameState}/>}
-      main
+        <Route path='/' exact render={() => ( // use exact render to avoid showing settings- and play-buttons on settings-page
+          <>
+            {!token && <Login />}
+            { token && gameActive && trackList && 
+              <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
+            }
+            { token && gameActive && trackList && 
+              <InputField track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} />
+            }
+            {!gameActive && <Menu changeGameState={changeGameState} settings={ {"numberOfTracks": numberOfTracks, "playlist": playlist} }/>}
+          </>
+        )}>
+        </Route>
+        {<Route exact path="/settings" render={() => <Settings getSettings={getSettings} />} />}
     </div>
+    </Router>
   );
 }
 
