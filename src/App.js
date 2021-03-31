@@ -27,6 +27,7 @@ function App() {
   const [trackIndex, setTrackIndex] = useState(0);
   const [gameActive, setGameState] = useState(false);
   const [numberCorrect, setNumberCorrect] = useState(0)
+  const [finalResult, setFinalResult] = useState("")
 
   useEffect(() => {
     // Set token
@@ -59,6 +60,7 @@ function App() {
 
   function resetGame() {
     setTrackIndex(0)
+    setNumberCorrect(0)
     changeGameState(false)
   }
 
@@ -79,6 +81,7 @@ function App() {
     let maxTrackIndex = trackList.length - 1
     if (trackIndex === maxTrackIndex) {
       console.log("Reached end of playlist!")
+      setFinalResult("The final result is " + numberCorrect + " of " + trackList.length + " correct!")
       resetGame()
     } else {
       setTrackIndex((v) => v + 1)
@@ -103,9 +106,9 @@ function App() {
               <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
             }
             { token && gameActive && trackList && 
-              <GameWindow track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} numberOfTracks={trackList.length} totalCorrect={numberCorrect} />
+              <GameWindow track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} numberOfTracks={trackList.length} totalCorrect={numberCorrect}/>
             }
-            { token && !gameActive && <Menu changeGameState={changeGameState} />}
+            { token && !gameActive && <Menu changeGameState={changeGameState} message={finalResult}/>}
           </>
         )}>
         </Route>

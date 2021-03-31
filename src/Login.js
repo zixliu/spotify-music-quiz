@@ -6,7 +6,7 @@ function Login() {
   return (
     <div className="login">
       <img
-        src="https://miro.medium.com/max/1400/1*Od9Evb7e9yCIHf2s6Sl7kQ.gif"
+        src="http://cdn.lowgif.com/medium/501ab4c23e198d0f-.gif"
         alt=""
       />
       <a href={accessUrl}>LOGIN TO SPOTIFY</a>

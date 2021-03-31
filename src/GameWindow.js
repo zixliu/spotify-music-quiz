@@ -18,7 +18,7 @@ export default function GameWindow({track, setAnswerCorrect, totalCorrect, numbe
             }
             else {
                 console.log("Wrong!")
-                setResult("Wrong!")
+                setResult("Wrong! The correct answer is " + track.name)
                 setAnswerCorrect(false);
             }
 
@@ -32,7 +32,8 @@ export default function GameWindow({track, setAnswerCorrect, totalCorrect, numbe
                 className="field"
                 id="inputAnswer"
                 onKeyPress={handleKeyPress}
-                placeholder="Guess the title!">
+                placeholder="Guess the title!"
+                autoComplete="off">
             </input>
             <h2>{result}</h2>
             <h2>{totalCorrect} of {numberOfTracks} correct!</h2>
