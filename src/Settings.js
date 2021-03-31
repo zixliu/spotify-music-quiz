@@ -5,7 +5,6 @@ export default function Settings({getSettings}) {
     const onClick = () => {
         let numberOfTracks = document.getElementById('inputNumberOfTracks').value;
         let playlist = document.getElementById('inputPlaylist').value;
-
         getSettings(numberOfTracks, playlist)
     }
 

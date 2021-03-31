@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom'
 
-export default function Menu({changeGameState, settings}) {
+export default function Menu({changeGameState}) {
 
     const onClick = () => {
         changeGameState(true)
-        console.log("Number of tracks: " + settings.numberOfTracks)
-        console.log("Playlist: " + settings.playlist)
     }
 
     return (
