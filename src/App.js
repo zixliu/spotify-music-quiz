@@ -1,6 +1,7 @@
 import './App.css';
 import Login from './Login';
 import Player from './Player';
+import Menu from './Menu';
 import InputField from './InputField';
 import React, { useEffect, useState } from "react";
 import { useStateValue } from "./StateProvider";
@@ -22,6 +23,7 @@ function shuffleArray(input) {
 function App() {
   const [token, dispatch] = useState(null);
   const [track, setTrack] = useState(null);
+  const [gameActive, setGameState] = useState(false);
 
   useEffect(() => {
     // Set token
@@ -61,6 +63,10 @@ function App() {
     }
   } 
 
+  const changeGameState = (gameState) => {
+      setGameState(gameState)
+  }
+
 
   return (
     // <div className="App">
@@ -73,8 +79,9 @@ function App() {
       
     <div className="app">
         {!token && <Login />}
-        {token && <Player token={s.getAccessToken()} track={track}/>}
-        <InputField track={track} setAnswerCorrect={setAnswerCorrect}/>
+        {token && gameActive && <Player token={s.getAccessToken()} track={track}/>}
+        {token && gameActive && <InputField track={track} setAnswerCorrect={setAnswerCorrect}/>}
+        {!gameActive && <Menu changeGameState={changeGameState}/>}
     </div>
   );
 }
