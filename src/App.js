@@ -24,7 +24,8 @@ function shuffleArray(input) {
 
 function App() {
   const [token, dispatch] = useState(null);
-  const [track, setTrack] = useState(null);
+  const [trackList, setTrackList] = useState();
+  const [trackIndex, setTrackIndex] = useState(0);
   const [gameActive, setGameState] = useState(false);
   const [numberOfTracks, setNumberOfTracks] = useState(null);
   const [playlist, setPlaylist] = useState(null);
@@ -44,54 +45,54 @@ function App() {
       });
 
       s.getPlaylist("3YA2HwKlRVBeHgIPB5FW2o").then((response) => {
-        setTrack(response.body.tracks.items[0].track)
-    })    
-      
+        let trackShuffled = shuffleArray(response.body.tracks.items)
+        setTrackList(trackShuffled)
+      })
     }
   }, [token, dispatch]); // , [token, dispatch]
 
   // sets answerCorrect to true if the user guesses the correct title of the track.
   // the function is passed down to the InputField-component where it gets the value
   const setAnswerCorrect = (answerCorrect) => {
-    if (answerCorrect == true) {
-      
+    if (answerCorrect === true) {
       console.log(answerCorrect)
-      
-      // Replace this with the function that changes to a random song
-      s.getPlaylist("3K4Vb4ydfA2DMhezlfvx2Y").then((response) => {
-        setTrack(response.body.tracks.items[0].track)
-    })    
     }
     else {
       console.log(answerCorrect)
     }
-  } 
+    moveToNextTrackInTracklist()
+  }
+
+  function moveToNextTrackInTracklist() {
+    let maxTrackIndex = trackList.length - 1
+    if (trackIndex === maxTrackIndex) {
+      console.log("Reached end of playlist!")
+    } else {
+      setTrackIndex((v) => v + 1)
+    }
+  }
 
   const changeGameState = (gameState) => {
       setGameState(gameState)
   }
-
+  
   const getSettings = (numberOfTracks, playlist) => {
     setNumberOfTracks(numberOfTracks);
     setPlaylist(playlist);
   }
 
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <h1>Hello</h1>
-    //   </header>
-    // </div>
-    // {!token && <Login />}
-      // {token && <Player spotify={s} />}
-
     <Router>
     <div className="app">
         <Route path='/' exact render={() => ( // use exact render to avoid showing settings- and play-buttons on settings-page
           <>
             {!token && <Login />}
-            {token && gameActive && <Player token={s.getAccessToken()} track={track}/>}
-            {token && gameActive && <InputField track={track} setAnswerCorrect={setAnswerCorrect}/>}
+            { token && gameActive && trackList && 
+              <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
+            }
+            { token && gameActive && trackList && 
+              <InputField track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} />
+            }
             {!gameActive && <Menu changeGameState={changeGameState} settings={ {"numberOfTracks": numberOfTracks, "playlist": playlist} }/>}
           </>
         )}>
