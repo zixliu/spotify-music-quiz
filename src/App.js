@@ -2,7 +2,7 @@ import './App.css';
 import Login from './Login';
 import Player from './Player';
 import Menu from './Menu';
-import InputField from './InputField';
+import GameWindow from './GameWindow';
 import Settings from './Settings';
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -26,8 +26,7 @@ function App() {
   const [trackList, setTrackList] = useState();
   const [trackIndex, setTrackIndex] = useState(0);
   const [gameActive, setGameState] = useState(false);
-  const [numberOfTracks, setNumberOfTracks] = useState(20);
-  const [playlist, setPlaylist] = useState("3YA2HwKlRVBeHgIPB5FW2o");
+  const [numberCorrect, setNumberCorrect] = useState(0)
 
   useEffect(() => {
     // Set token
@@ -43,19 +42,32 @@ function App() {
         token: _token,
       });
 
-      s.getPlaylist(playlist).then((response) => {
-        
-        let trackShuffled = shuffleArray(response.body.tracks.items)
-        setTrackList(trackShuffled)
-      })
+      setNewPlaylist("3YA2HwKlRVBeHgIPB5FW2o", 3)
     }
-  }, [token, dispatch, playlist]); // , [token, dispatch]
+  }, [token, dispatch]); // , [token, dispatch]
+
+  function setNewPlaylist(playlistId, numberOfTracks) {
+    s.getPlaylist(playlistId,{limit: 100}).then((response) => {
+      let trackShuffled = shuffleArray(response.body.tracks.items)
+
+      if (trackShuffled.length > numberOfTracks) {
+        trackShuffled = trackShuffled.slice(0, numberOfTracks)
+      }
+      setTrackList(trackShuffled)
+    })
+  }
+
+  function resetGame() {
+    setTrackIndex(0)
+    changeGameState(false)
+  }
 
   // sets answerCorrect to true if the user guesses the correct title of the track.
   // the function is passed down to the InputField-component where it gets the value
   const setAnswerCorrect = (answerCorrect) => {
     if (answerCorrect === true) {
       console.log(answerCorrect)
+      setNumberCorrect((v) => v + 1)
     }
     else {
       console.log(answerCorrect)
@@ -67,6 +79,7 @@ function App() {
     let maxTrackIndex = trackList.length - 1
     if (trackIndex === maxTrackIndex) {
       console.log("Reached end of playlist!")
+      resetGame()
     } else {
       setTrackIndex((v) => v + 1)
     }
@@ -76,9 +89,8 @@ function App() {
       setGameState(gameState)
   }
   
-  const getSettings = (numberOfTracks, playlist) => {
-    setNumberOfTracks(numberOfTracks);
-    setPlaylist(playlist);
+  const getSettings = (numberOfTracks, playlistId) => {
+    setNewPlaylist(playlistId, numberOfTracks)
   }
 
   return (
@@ -91,9 +103,9 @@ function App() {
               <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
             }
             { token && gameActive && trackList && 
-              <InputField track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} />
+              <GameWindow track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} numberOfTracks={trackList.length} totalCorrect={numberCorrect} />
             }
-            {!gameActive && <Menu changeGameState={changeGameState} settings={ {"numberOfTracks": numberOfTracks, "playlist": playlist} }/>}
+            { token && !gameActive && <Menu changeGameState={changeGameState} />}
           </>
         )}>
         </Route>

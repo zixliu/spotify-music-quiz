@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import './InputField.css'
+import './GameWindow.css'
 
-export default function InputField({track, setAnswerCorrect}) {
+export default function GameWindow({track, setAnswerCorrect, totalCorrect, numberOfTracks}) {
     const [result, setResult] = useState("")
 
     // check user has guessed the correct title of the track and pass boolean value to App
@@ -10,6 +10,7 @@ export default function InputField({track, setAnswerCorrect}) {
 
             let answer = document.getElementById("inputAnswer").value;
 
+            console.log("The correct answer is " + track.name)
             if (answer.toLowerCase() === track.name.toLowerCase()) {
                 console.log("Correct!")
                 setResult("Correct!")
@@ -34,6 +35,7 @@ export default function InputField({track, setAnswerCorrect}) {
                 placeholder="Guess the title!">
             </input>
             <h2>{result}</h2>
+            <h2>{totalCorrect} of {numberOfTracks} correct!</h2>
         </div>
     )
 }
