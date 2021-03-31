@@ -9,10 +9,19 @@ import { getTokenFromResponse } from "./spotifyConfig";
 var SpotifyWebApi = require('spotify-web-api-node');
 const s = new SpotifyWebApi();
 
+function shuffleArray(input) {
+  for (let i = input.length - 1; i >= 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    const itemAtIndex = input[randomIndex];
+    input[randomIndex] = input[i];
+    input[i] = itemAtIndex;
+  }
+  return input;
+}
+
 function App() {
   const [token, dispatch] = useState(null);
   const [track, setTrack] = useState(null);
-  //const [answerCorrect, setAnswerCorrect] = useState(false); is it necessary to use a useState to set answerCorrect value?
 
   useEffect(() => {
     // Set token
@@ -39,7 +48,7 @@ function App() {
   // the function is passed down to the InputField-component where it gets the value
   const setAnswerCorrect = (answerCorrect) => {
     if (answerCorrect == true) {
-      //setAnswerCorrect(true); is it necessary to use a useState to set answerCorrect value? Problem with using useState: value isn't updated "fast" enough
+      
       console.log(answerCorrect)
       
       // Replace this with the function that changes to a random song
@@ -48,10 +57,10 @@ function App() {
     })    
     }
     else {
-      //setAnswerCorrect(false) is it necessary to use a useState to set answerCorrect value? Problem with using useState: value isn't updated "fast" enough
       console.log(answerCorrect)
     }
   } 
+
 
   return (
     // <div className="App">
