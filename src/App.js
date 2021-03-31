@@ -6,7 +6,6 @@ import InputField from './InputField';
 import Settings from './Settings';
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { useStateValue } from "./StateProvider";
 import { getTokenFromResponse } from "./spotifyConfig";
 
 var SpotifyWebApi = require('spotify-web-api-node');
@@ -27,8 +26,8 @@ function App() {
   const [trackList, setTrackList] = useState();
   const [trackIndex, setTrackIndex] = useState(0);
   const [gameActive, setGameState] = useState(false);
-  const [numberOfTracks, setNumberOfTracks] = useState(null);
-  const [playlist, setPlaylist] = useState(null);
+  const [numberOfTracks, setNumberOfTracks] = useState(20);
+  const [playlist, setPlaylist] = useState("3YA2HwKlRVBeHgIPB5FW2o");
 
   useEffect(() => {
     // Set token
@@ -44,12 +43,13 @@ function App() {
         token: _token,
       });
 
-      s.getPlaylist("3YA2HwKlRVBeHgIPB5FW2o").then((response) => {
+      s.getPlaylist(playlist).then((response) => {
+        
         let trackShuffled = shuffleArray(response.body.tracks.items)
         setTrackList(trackShuffled)
       })
     }
-  }, [token, dispatch]); // , [token, dispatch]
+  }, [token, dispatch, playlist]); // , [token, dispatch]
 
   // sets answerCorrect to true if the user guesses the correct title of the track.
   // the function is passed down to the InputField-component where it gets the value
