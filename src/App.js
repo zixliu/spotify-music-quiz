@@ -1,6 +1,7 @@
 import './App.css';
 import Login from './Login';
 import Player from './Player';
+import Menu from './Menu';
 import InputField from './InputField';
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import { useStateValue } from "./StateProvider";
@@ -23,6 +24,7 @@ function App() {
   const [token, dispatch] = useState(null);
   const [trackList, setTrackList] = useState();
   const [trackIndex, setTrackIndex] = useState(0);
+  const [gameActive, setGameState] = useState(false);
 
   useEffect(() => {
     // Set token
@@ -59,7 +61,6 @@ function App() {
 
   function moveToNextTrackInTracklist() {
     let maxTrackIndex = trackList.length - 1
-
     if (trackIndex === maxTrackIndex) {
       console.log("Reached end of playlist!")
     } else {
@@ -67,15 +68,21 @@ function App() {
     }
   }
 
+  const changeGameState = (gameState) => {
+      setGameState(gameState)
+  }
+
   return (
     <div className="app">
       {!token && <Login />}
-      { token && trackList && 
+      { token && gameActive && trackList && 
         <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
       }
-      { token && trackList && 
+      { token && gameActive && trackList && 
         <InputField track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} />
       }
+      {!gameActive && <Menu changeGameState={changeGameState}/>}
+      main
     </div>
   );
 }
