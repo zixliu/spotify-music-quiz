@@ -12,6 +12,7 @@ const s = new SpotifyWebApi();
 function App() {
   const [token, dispatch] = useState(null);
   const [track, setTrack] = useState(null);
+  //const [answerCorrect, setAnswerCorrect] = useState(false); is it necessary to use a useState to set answerCorrect value?
 
   useEffect(() => {
     // Set token
@@ -29,14 +30,28 @@ function App() {
 
       s.getPlaylist("3YA2HwKlRVBeHgIPB5FW2o").then((response) => {
         setTrack(response.body.tracks.items[0].track)
-    })
-    
+    })    
       
     }
   }, [token, dispatch]); // , [token, dispatch]
 
-  
-
+  // sets answerCorrect to true if the user guesses the correct title of the track.
+  // the function is passed down to the InputField-component where it gets the value
+  const setAnswerCorrect = (answerCorrect) => {
+    if (answerCorrect == true) {
+      //setAnswerCorrect(true); is it necessary to use a useState to set answerCorrect value? Problem with using useState: value isn't updated "fast" enough
+      console.log(answerCorrect)
+      
+      // Replace this with the function that changes to a random song
+      s.getPlaylist("3K4Vb4ydfA2DMhezlfvx2Y").then((response) => {
+        setTrack(response.body.tracks.items[0].track)
+    })    
+    }
+    else {
+      //setAnswerCorrect(false) is it necessary to use a useState to set answerCorrect value? Problem with using useState: value isn't updated "fast" enough
+      console.log(answerCorrect)
+    }
+  } 
 
   return (
     // <div className="App">
@@ -50,7 +65,7 @@ function App() {
     <div className="app">
         {!token && <Login />}
         {token && <Player token={s.getAccessToken()} track={track}/>}
-        <InputField/>
+        <InputField track={track} setAnswerCorrect={setAnswerCorrect}/>
     </div>
   );
 }
