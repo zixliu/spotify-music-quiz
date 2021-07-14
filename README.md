@@ -1,6 +1,6 @@
-# Spotify Music Quiz
+# Spotify Music Quiz 🎵
 
-This game uses the Spotify API to generate a music quiz, where you can guess the song and artist name.
+This game uses Spotify playlists to generate music quizzes. It plays random songs from any playlist, and allows the user to guess the song and artist name 🎵
 
 ---
 
