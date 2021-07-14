@@ -1,3 +1,9 @@
+# Spotify Music Quiz
+
+This game uses the Spotify API to generate a music quiz, where you can guess the song and artist name.
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
