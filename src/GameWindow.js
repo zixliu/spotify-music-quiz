@@ -7,7 +7,7 @@ export default function GameWindow({track, setAnswerCorrectSong, setAnswerCorrec
     const [showSong, setShowSong] = useState(true)
     const [showArtist, setShowArtist] = useState(true)
 
-    function resetLayout(){
+    function resetLayout() {
         setShowSong(true)
         setShowArtist(true)
         moveToNextTrack()
@@ -20,22 +20,18 @@ export default function GameWindow({track, setAnswerCorrectSong, setAnswerCorrec
 
             let answer = document.getElementById("inputAnswerTitle").value;
             let trackNameList = [track.name]
-            let artistNames = track.artists.map(artist => artist.name).join(", ")
 
             if (fuzzySearch(answer, trackNameList).length > 0) {
-                console.log("Correct! Result is ")
-                console.log(result)
-                setResult("Correct! The answer is " + track.name + " by " + artistNames)
+                setResult("Correct! The answer is " + track.name)
                 setAnswerCorrectSong(true);
-            }
-            else {
-                console.log("Wrong!")
-                setResult("Wrong! The answer is " + track.name + " by " + artistNames)
+            } else {
+                setResult("Wrong! The answer is " + track.name)
                 setAnswerCorrectSong(false);
+            }
 
             setShowSong(false)
 
-            if (!showArtist){
+            if (!showArtist) {
                 resetLayout()
             }
 
@@ -46,21 +42,19 @@ export default function GameWindow({track, setAnswerCorrectSong, setAnswerCorrec
     const handleKeyPressArtist = (event) => {
         if (event.key === 'Enter' || event.charCode === 13) {
             let answer = document.getElementById("inputAnswerArtist").value;
-            let artistNames = track.artists.map(a => a.name.toLowerCase())
+            let artistNames = track.artists.map(a => a.name)
 
             if (fuzzySearch(answer, artistNames).length > 0) {
-                console.log("Correct! The answer is " + track.name + " by " + artistNames.join(", "))
-                setResult("Correct!")
+                setResult("Correct! The answer is " + artistNames.join(", "))
                 setAnswerCorrectArtist(true);
             } else {
-                console.log("Wrong!")
-                setResult("Wrong! The answer is " + track.name + " by " + artistNames.join(", "))
+                setResult("Wrong! The answer is " + artistNames.join(", "))
                 setAnswerCorrectArtist(false)
             }
           
             setShowArtist(false);
 
-            if (!showSong){
+            if (!showSong) {
                 resetLayout()
             }
 
