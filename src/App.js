@@ -26,8 +26,10 @@ function App() {
   const [trackList, setTrackList] = useState();
   const [trackIndex, setTrackIndex] = useState(0);
   const [gameActive, setGameState] = useState(false);
-  const [numberCorrect, setNumberCorrect] = useState(0)
+  const [numberCorrectSong, setNumberCorrectSong] = useState(0)
+  const [numberCorrectArtist, setNumberCorrectArtist] = useState(0)
   const [finalResult, setFinalResult] = useState("")
+
 
   useEffect(() => {
     // Set token
@@ -60,28 +62,39 @@ function App() {
 
   function resetGame() {
     setTrackIndex(0)
-    setNumberCorrect(0)
+    setNumberCorrectSong(0)
+    setNumberCorrectArtist(0)
     changeGameState(false)
   }
 
   // sets answerCorrect to true if the user guesses the correct title of the track.
   // the function is passed down to the InputField-component where it gets the value
-  const setAnswerCorrect = (answerCorrect) => {
-    if (answerCorrect === true) {
-      console.log(answerCorrect)
-      setNumberCorrect((v) => v + 1)
+  const setAnswerCorrectSong = (answerCorrectSong) => {
+    if (answerCorrectSong === true) {
+      console.log(answerCorrectSong)
+      setNumberCorrectSong((v) => v + 1)
     }
     else {
-      console.log(answerCorrect)
+      console.log(answerCorrectSong)
     }
-    moveToNextTrackInTracklist()
   }
+
+  const setAnswerCorrectArtist = (answerCorrectArtist) => {
+    if (answerCorrectArtist === true) {
+      console.log(answerCorrectArtist)
+      setNumberCorrectArtist((v) => v + 1)
+    }
+    else {
+      console.log(answerCorrectArtist)
+    }
+  }
+
 
   function moveToNextTrackInTracklist() {
     let maxTrackIndex = trackList.length - 1
     if (trackIndex === maxTrackIndex) {
       console.log("Reached end of playlist!")
-      setFinalResult("The final result is " + numberCorrect + " of " + trackList.length + " correct!")
+      setFinalResult("The final result is " + numberCorrectSong + "/" + trackList.length + " songs and " + numberCorrectArtist + "/" + trackList.length + " artists")
       resetGame()
     } else {
       setTrackIndex((v) => v + 1)
@@ -107,7 +120,7 @@ function App() {
               <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
             }
             { token && gameActive && trackList && 
-              <GameWindow track={trackList[trackIndex].track} setAnswerCorrect={setAnswerCorrect} numberOfTracks={trackList.length} totalCorrect={numberCorrect}/>
+              <GameWindow track={trackList[trackIndex].track} setAnswerCorrectSong={setAnswerCorrectSong} setAnswerCorrectArtist={setAnswerCorrectArtist} numberOfTracks={trackList.length} totalCorrectSongs={numberCorrectSong} totalCorrectArtists={numberCorrectArtist} moveToNextTrack={moveToNextTrackInTracklist}/>
             }
             { token && !gameActive && <Menu changeGameState={changeGameState} message={finalResult}/>}
           </>
