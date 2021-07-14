@@ -5,7 +5,7 @@ export default function Settings({getSettings}) {
     const onClick = () => {
         let numberOfTracks = document.getElementById('inputNumberOfTracks').value;
         let playlistEmbed = document.getElementById('inputPlaylist').value;
-        let playlist = playlistEmbed.match('(?<=playlist/)(.*?)(?=")')[0]
+        let playlist = playlistEmbed.match('(?<=playlist\/)(.*?)(?=["\?])')[0]
         getSettings(numberOfTracks, playlist)
     }
 

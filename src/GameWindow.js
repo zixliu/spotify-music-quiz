@@ -11,16 +11,17 @@ export default function GameWindow({track, setAnswerCorrect, totalCorrect, numbe
 
             let answer = document.getElementById("inputAnswerTitle").value;
             let trackNameList = [track.name]
+            let artistNames = track.artists.map(artist => artist.name).join(", ")
 
             if (fuzzySearch(answer, trackNameList).length > 0) {
                 console.log("Correct! Result is ")
                 console.log(result)
-                setResult("Correct!")
+                setResult("Correct! The answer is " + track.name + " by " + artistNames)
                 setAnswerCorrect(true);
             }
             else {
                 console.log("Wrong!")
-                setResult("Wrong! The correct answer is " + track.name)
+                setResult("Wrong! The answer is " + track.name + " by " + artistNames)
                 setAnswerCorrect(false);
             }
 
@@ -32,15 +33,15 @@ export default function GameWindow({track, setAnswerCorrect, totalCorrect, numbe
         if (event.key === 'Enter' || event.charCode === 13) {
             let answer = document.getElementById("inputAnswerArtist").value;
             let artistNames = track.artists.map(a => a.name.toLowerCase())
-            
+
             if (fuzzySearch(answer, artistNames).length > 0) {
-                console.log("Correct!")
+                console.log("Correct! The answer is " + track.name + " by " + artistNames.join(", "))
                 setResult("Correct!")
                 setAnswerCorrect(true);
             }
             else {
                 console.log("Wrong!")
-                setResult("Wrong! The correct artist name(s) are: " + track.artists.map(artist => artist.name).join(", "))
+                setResult("Wrong! The answer is " + track.name + " by " + artistNames.join(", "))
                 setAnswerCorrect(false);
             }
 
