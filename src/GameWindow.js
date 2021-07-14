@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './GameWindow.css'
+import Fuse from 'fuse.js'
 
 export default function GameWindow({track, setAnswerCorrectSong, setAnswerCorrectArtist, numberOfTracks, totalCorrectSongs, totalCorrectArtists, moveToNextTrack}) {
     const [result, setResult] = useState("")
@@ -18,23 +19,24 @@ export default function GameWindow({track, setAnswerCorrectSong, setAnswerCorrec
         if (event.key === 'Enter' || event.charCode === 13) {
 
             let answer = document.getElementById("inputAnswerTitle").value;
-            if (answer.toLowerCase() === track.name.toLowerCase()) {
-                console.log("Correct song!")
-                setResult("Correct song!")
-                setAnswerCorrectSong(true)
+            let trackNameList = [track.name]
+            let artistNames = track.artists.map(artist => artist.name).join(", ")
+
+            if (fuzzySearch(answer, trackNameList).length > 0) {
+                console.log("Correct! Result is ")
+                console.log(result)
+                setResult("Correct! The answer is " + track.name + " by " + artistNames)
+                setAnswerCorrectSong(true);
             }
             else {
-                console.log("Wrong song!")
-                setResult("Wrong! The correct answer is " + track.name)
-                setAnswerCorrectSong(false)
-
-            }
+                console.log("Wrong!")
+                setResult("Wrong! The answer is " + track.name + " by " + artistNames)
+                setAnswerCorrectSong(false);
 
             setShowSong(false)
 
-            if (! showArtist){
+            if (!showArtist){
                 resetLayout()
-                
             }
 
             document.getElementById("inputAnswerTitle").value = ""
@@ -43,31 +45,38 @@ export default function GameWindow({track, setAnswerCorrectSong, setAnswerCorrec
 
     const handleKeyPressArtist = (event) => {
         if (event.key === 'Enter' || event.charCode === 13) {
-
             let answer = document.getElementById("inputAnswerArtist").value;
-            if (track.artists.map(a => a.name.toLowerCase()).includes(answer.toLowerCase())) {
-                console.log("Correct artist!")
-                setResult("Correct artist!");
-                setAnswerCorrectArtist(true)
+            let artistNames = track.artists.map(a => a.name.toLowerCase())
 
-            }
-            else {
-                console.log("Wrong artist!")
-                setResult("Wrong! The correct artist name(s) are: " + track.artists.map(artist => artist.name).join(", "))
+            if (fuzzySearch(answer, artistNames).length > 0) {
+                console.log("Correct! The answer is " + track.name + " by " + artistNames.join(", "))
+                setResult("Correct!")
+                setAnswerCorrectArtist(true);
+            } else {
+                console.log("Wrong!")
+                setResult("Wrong! The answer is " + track.name + " by " + artistNames.join(", "))
                 setAnswerCorrectArtist(false)
             }
+          
             setShowArtist(false);
 
-            if (! showSong){
+            if (!showSong){
                 resetLayout()
-
             }
 
             document.getElementById("inputAnswerArtist").value = ""
         }
     }
 
-
+    function fuzzySearch(userInput, answerList) {
+        const options = {
+            includeScore: true,
+            threshold: 0.3
+        }
+        const fuse = new Fuse(answerList, options)
+        return fuse.search(userInput)
+    }
+      
     return (
         <div>
             {showSong ? 
