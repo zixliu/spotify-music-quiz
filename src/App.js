@@ -102,6 +102,7 @@ function App() {
         <Route path='/' exact render={() => ( // use exact render to avoid showing settings- and play-buttons on settings-page
           <>
             {!token && <Login />}
+            {console.log(trackList)}
             { token && gameActive && trackList && 
               <Player token={s.getAccessToken()} track={trackList[trackIndex].track} /> 
             }
