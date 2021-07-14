@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './GameWindow.css'
+import Fuse from 'fuse.js'
 
 export default function GameWindow({track, setAnswerCorrect, totalCorrect, numberOfTracks}) {
     const [result, setResult] = useState("")
@@ -9,8 +10,11 @@ export default function GameWindow({track, setAnswerCorrect, totalCorrect, numbe
         if (event.key === 'Enter' || event.charCode === 13) {
 
             let answer = document.getElementById("inputAnswerTitle").value;
-            if (answer.toLowerCase() === track.name.toLowerCase()) {
-                console.log("Correct!")
+            let trackNameList = [track.name]
+
+            if (fuzzySearch(answer, trackNameList).length > 0) {
+                console.log("Correct! Result is ")
+                console.log(result)
                 setResult("Correct!")
                 setAnswerCorrect(true);
             }
@@ -26,9 +30,10 @@ export default function GameWindow({track, setAnswerCorrect, totalCorrect, numbe
 
     const handleKeyPressArtist = (event) => {
         if (event.key === 'Enter' || event.charCode === 13) {
-
             let answer = document.getElementById("inputAnswerArtist").value;
-            if (track.artists.map(a => a.name.toLowerCase()).includes(answer.toLowerCase())) {
+            let artistNames = track.artists.map(a => a.name.toLowerCase())
+            
+            if (fuzzySearch(answer, artistNames).length > 0) {
                 console.log("Correct!")
                 setResult("Correct!")
                 setAnswerCorrect(true);
@@ -41,6 +46,15 @@ export default function GameWindow({track, setAnswerCorrect, totalCorrect, numbe
 
             document.getElementById("inputAnswerArtist").value = ""
         }
+    }
+
+    function fuzzySearch(userInput, answerList) {
+        const options = {
+            includeScore: true,
+            threshold: 0.3
+        }
+        const fuse = new Fuse(answerList, options)
+        return fuse.search(userInput)
     }
 
     return (
